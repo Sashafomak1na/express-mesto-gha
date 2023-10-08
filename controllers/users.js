@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const { HTTP_STATUS_OK } = require('http2').constants;
 const {
   ERR_BAD_REQUEST,
   ERR_NOT_FOUND,
@@ -9,7 +10,7 @@ const {
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(200).send(users);
+      res.status(HTTP_STATUS_OK).send(users);
     })
     .catch(() => res.status(ERROR_INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' }));
 };
@@ -25,7 +26,7 @@ const getUserId = (req, res) => {
 
         return;
       }
-      res.status(200).send(user);
+      res.status(HTTP_STATUS_OK).send(user);
     })
     .catch((error) => {
       if (error.name === 'CastError') {
@@ -43,7 +44,7 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((newUser) => res.status(200).send(newUser))
+    .then((newUser) => res.status(HTTP_STATUS_OK).send(newUser))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return res.status(ERR_BAD_REQUEST).send({
@@ -67,7 +68,7 @@ const updateUserInfo = (req, res) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .then((updateUser) => res.status(200).send(updateUser))
+    .then((updateUser) => res.status(HTTP_STATUS_OK).send(updateUser))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return res.status(ERR_BAD_REQUEST).send({
@@ -90,7 +91,7 @@ const updateAvatar = (req, res) => {
       runValidators: true,
     },
   )
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(HTTP_STATUS_OK).send(user))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         return res.status(ERR_BAD_REQUEST).send({

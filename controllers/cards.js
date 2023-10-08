@@ -1,3 +1,4 @@
+const { HTTP_STATUS_OK } = require('http2').constants;
 const Card = require('../models/card');
 const {
   ERR_BAD_REQUEST,
@@ -18,7 +19,7 @@ const checkCard = (card, res) => {
 // Данных карточек
 const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(200).send(cards))
+    .then((cards) => res.status(HTTP_STATUS_OK).send(cards))
     .catch(() => {
       res.status(ERROR_INTERNAL_SERVER).send({ message: 'На сервере произошла ошибка' });
     });
@@ -32,7 +33,7 @@ const createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => {
-      res.status(200).send({
+      res.status(HTTP_STATUS_OK).send({
         name: card.name,
         link: card.link,
         owner: card.owner,
