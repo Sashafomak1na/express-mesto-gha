@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../utils/constants');
+console.log(jwt);
 const AuthenticationError = require('../errors/authenticationError');
 const ConflictRequestError = require('../errors/conflictRequestError');
 const BadRequestError = require('../errors/badRequestError');
