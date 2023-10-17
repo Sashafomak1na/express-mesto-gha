@@ -25,6 +25,27 @@ const createCard = (req, res, next) => {
 		});
 };
 
+const deleteCard = (req, res, next) => {
+	const { cardId } = req.params;
+	Card.findById(cardId)
+		.orFail(() => new NotFoundError('Карточка не найдена'))
+		.then((card) => {
+			if (!card.owner.equals(req.user._id)) {
+				return next(new ForbiddenAccessError('Нет прав для удаления данной карточки'));
+			}
+			return card.deleteOne()
+
+				.then(() => res.send({ message: 'Карточка удалена' }));
+		})
+		.catch((err) => {
+			if (err.name === 'CastError') {
+				next(new BadRequestError('Переданы некорректные данные для удаления данной карточки'));
+			} else {
+				next(err);
+			}
+		});
+};
+
 const setLikeCard = (req, res, next) => {
 	Card.findByIdAndUpdate(
 		req.params.cardId,
@@ -61,27 +82,6 @@ const removeLikeCard = (req, res, next) => {
 		.catch((err) => {
 			if (err.name === 'CastError') {
 				next(new BadRequestError('Переданы некорректные данные при попытке убрать лайк у карточки'));
-			} else {
-				next(err);
-			}
-		});
-};
-
-const deleteCard = (req, res, next) => {
-	const { cardId } = req.params;
-	Card.findById(cardId)
-		.orFail(() => new NotFoundError('Карточка не найдена'))
-		.then((card) => {
-			if (!card.owner.equals(req.user._id)) {
-				return next(new ForbiddenAccessError('Нет прав для удаления данной карточки'));
-			}
-			return card.deleteOne()
-
-				.then(() => res.send({ message: 'Карточка удалена' }));
-		})
-		.catch((err) => {
-			if (err.name === 'CastError') {
-				next(new BadRequestError('Переданы некорректные данные для удаления данной карточки'));
 			} else {
 				next(err);
 			}
