@@ -77,7 +77,7 @@ const removeLikeCard = (req, res, next) => {
 			if (card) {
 				res.send(card)
 			} else {
-        throw new NotFoundError();
+        throw new NotFoundError('Карточка не найдена');
       }
 		})
 		.catch((err) => {
