@@ -74,10 +74,11 @@ const removeLikeCard = (req, res, next) => {
 		{ new: true },
 	)
 		.then((card) => {
-			if (card === null) {
-				next(new NotFoundError('Карточка не найдена'));
-			}
-			res.send({ data: card });
+			if (card) {
+				res.send(card)
+			} else {
+        throw new NotFoundError();
+      }
 		})
 		.catch((err) => {
 			if (err.name === 'CastError') {
