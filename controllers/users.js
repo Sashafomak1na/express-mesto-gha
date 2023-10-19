@@ -17,7 +17,6 @@ const getUsers = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => User.create({
@@ -26,8 +25,7 @@ const createUser = (req, res, next) => {
       avatar,
       email,
       password: hash,
-    }),
-    ),
+    }))
     .then((user) => res.status(201).send({
       data: {
         name: user.name,
@@ -36,20 +34,19 @@ const createUser = (req, res, next) => {
         email: user.email,
         _id: user.id,
       },
-      })
-    )
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         next(
           new ConflictRequestError(
-            "Пользователь с указанным электронным адресом уже зарегистрирован"
-          )
+            'Пользователь с указанным электронным адресом уже зарегистрирован',
+          ),
         );
-      } else if (err.name === "ValidationError") {
+      } else if (err.name === 'ValidationError"') {
         next(
           new BadRequestError(
-            "Переданы некорректные данные при создании пользователя"
-          )
+            'Переданы некорректные данные при создании пользователя',
+          ),
         );
       } else {
         next(err);
@@ -62,14 +59,14 @@ const getUserId = (req, res, next) => {
     .then((user) => {
       if (user === null) {
         throw new NotFoundError(
-          "Пользователь с указанным id не зарегистрирован"
+          'Пользователь с указанным id не зарегистрирован',
         );
       }
       res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        next(new BadRequestError("Передан некорректный id пользователя"));
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Передан некорректный id пользователя'));
       } else {
         next(err);
       }
@@ -85,7 +82,7 @@ const updateUserInfo = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    }
+    },
   )
     .then((user) => {
       if (user) {
@@ -93,11 +90,11 @@ const updateUserInfo = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         next(
           new BadRequestError(
-            "Переданы некорректные данные при обновлении информации о пользователе"
-          )
+            'Переданы некорректные данные при обновлении информации о пользователе',
+          ),
         );
       } else {
         next(err);
@@ -110,7 +107,7 @@ const getCurrentUserInfo = (req, res, next) => {
     .then((data) => {
       if (!data) {
         next(
-          new NotFoundError("Пользователь с указанным id не зарегистрирован")
+          new NotFoundError('Пользователь с указанным id не зарегистрирован'),
         );
       }
       res.send({ data });
@@ -127,7 +124,7 @@ const updateAvatar = (req, res, next) => {
       new: true,
       runValidators: true,
       upsert: false,
-    }
+    },
   )
     .then((user) => {
       if (user) {
@@ -135,16 +132,16 @@ const updateAvatar = (req, res, next) => {
       }
       if (!user) {
         next(
-          new NotFoundError("Пользователь с указанным id не зарегистрирован")
+          new NotFoundError('Пользователь с указанным id не зарегистрирован'),
         );
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         next(
           new BadRequestError(
-            "Переданы некорректные данные при обновлении аватара пользователя"
-          )
+            'Переданы некорректные данные при обновлении аватара пользователя',
+          ),
         );
       } else {
         next(err);
@@ -157,17 +154,17 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!email || !password) {
-        next(new AuthenticationError("Ошибка авторизации"));
+        next(new AuthenticationError('Ошибка авторизации'));
       }
       const token = jwt.sign({ _id: user._id }, SECRET_KEY, {
-        expiresIn: "7d",
+        expiresIn: '7d',
       });
       return res
-        .cookie("jwt", token, {
+        .cookie('jwt', token, {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .send({ message: "Успешная авторизация" });
+        .send({ message: 'Успешная авторизация' });
     })
     .catch(next);
 };
