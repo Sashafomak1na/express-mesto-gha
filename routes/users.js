@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { URL_VALIDATION } = require('../utils/constants');
 
@@ -7,8 +7,8 @@ const {
   getUserId,
   getCurrentUserInfo,
   updateUserInfo,
-  updateAvatar
-} = require("../controllers/users");
+  updateAvatar,
+} = require('../controllers/users');
 
 router.get('/', getUsers);
 
@@ -16,8 +16,8 @@ router.get('/me', getCurrentUserInfo);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().required(true).min(2).max(30),
+    about: Joi.string().required(true).min(2).max(30),
   }),
 }), updateUserInfo);
 

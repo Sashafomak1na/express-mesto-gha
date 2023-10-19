@@ -4,5 +4,5 @@ const URL_VALIDATION = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z
 
 module.exports = {
   SECRET_KEY,
-  URL_VALIDATION
+  URL_VALIDATION,
 };

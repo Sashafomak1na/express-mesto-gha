@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const { URL_VALIDATION } = require('../utils/constants');
@@ -7,27 +7,24 @@ const AuthenticationError = require('../errors/authenticationError');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто'
+    default: 'Жак-Ив Кусто',
   },
 
   about: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
-    default: 'Исследователь'
+    default: 'Исследователь',
   },
 
   avatar: {
     type: String,
-    required: true,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: (link) => URL_VALIDATION.test(link),
-      message: 'Требуется ввести URL'
+      message: 'Требуется ввести URL',
     },
   },
 

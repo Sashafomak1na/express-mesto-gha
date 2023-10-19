@@ -1,16 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/notFoundError');
 const limiter = require('./middlewares/reqLimiter');
 const { createUser, login } = require('./controllers/users');
 const { URL_VALIDATION } = require('./utils/constants');
 const { errorHandler } = require('./middlewares/errorHandler');
-const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const app = express();
