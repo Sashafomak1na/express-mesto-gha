@@ -84,10 +84,11 @@ const updateUserInfo = (req, res, next) => {
       upsert: false,
     },
   )
+    .orFail(() => {
+      throw new NotFoundError('Пользователь с указанным _id не найден');
+    })
     .then((user) => {
-      if (user) {
-        res.send({ data: user });
-      }
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -106,9 +107,7 @@ const getCurrentUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((data) => {
       if (!data) {
-        next(
-          new NotFoundError('Пользователь с указанным id не зарегистрирован'),
-        );
+        throw new NotFoundError('Пользователь с указанным id не зарегистрирован');
       }
       res.send({ data });
     })
@@ -153,9 +152,6 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!email || !password) {
-        next(new AuthenticationError('Ошибка авторизации'));
-      }
       const token = jwt.sign({ _id: user._id }, SECRET_KEY, {
         expiresIn: '7d',
       });
